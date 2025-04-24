@@ -1228,12 +1228,16 @@ static HOMOG2D_INUMTYPE& nullDeter()
 	return _zeroDeter;
 }
 
+// VGT BEGIN Fix doNotCheckRadius
+#ifndef HOMOG2D_NOCHECKS
 /// This one is used for the Welzl minimum enclosing circle
 static bool& doNotCheckRadius()
 {
 	static bool _doNotCheckRadius = false;
 	return _doNotCheckRadius;
 }
+#endif // HOMOG2D_NOCHECKS
+// VGT END
 
 /// Helper function, could be needed
 inline
@@ -5759,10 +5763,18 @@ Circle_<FPT>::set( const T& pts )
 //	std::random_shuffle( P_copy.begin(), P_copy.end() ); // ? check: what happens if removed?
 	std::vector<Point2d_<HOMOG2D_INUMTYPE>> R;
 
+// VGT BEGIN Fix doNotCheckRadius
+#ifndef HOMOG2D_NOCHECKS
 	h2d::thr::doNotCheckRadius() = true;
+#endif // HOMOG2D_NOCHECKS
+// VGT END
 	auto cir = p_WelzlHelper( P_copy, R, P_copy.size() );
 	set( cir.center(), cir.radius() );
+// VGT BEGIN Fix doNotCheckRadius
+#ifndef HOMOG2D_NOCHECKS
 	h2d::thr::doNotCheckRadius() = false;
+#endif // HOMOG2D_NOCHECKS
+// VGT END
 }
 
 //------------------------------------------------------------------
