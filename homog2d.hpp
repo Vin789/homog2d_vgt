@@ -177,6 +177,8 @@ See https://github.com/skramm/homog2d
 	#define HOMOG2D_BIND_Y y
 #endif
 
+// VGT BEGIN Disable exception for homog2d
+#ifdef HOMOG2D_USE_EXCEPTION
 /// Error throw wrapper macro
 #define HOMOG2D_THROW_ERROR_1( msg ) \
 	{ \
@@ -196,7 +198,11 @@ See https://github.com/skramm/homog2d
 			<< "\n -Error count=" << ++err::errorCount(); \
 		throw std::runtime_error( oss.str() ); \
 	}
-
+#else
+	#define HOMOG2D_THROW_ERROR_1( msg ) ((void) 0)
+	#define HOMOG2D_THROW_ERROR_2( func, msg ) ((void) 0)
+#endif // HOMOG2D_USE_EXCEPTION
+// VGT END
 
 ///////////////////////////////////////
 // Default values for thresholds
