@@ -590,8 +590,10 @@ public:
 	}
 	DrawParams& setPointStyle( PtStyle ps )
 	{
+#ifdef HOMOG2D_USE_EXCEPTION
 		if( (int)ps > (int)PtStyle::Dot )
 			throw std::runtime_error( "Error: invalid value for point style");
+#endif // HOMOG2D_USE_EXCEPTION
 		_dpValues._ptStyle = ps;
 		return *this;
 	}
@@ -10483,6 +10485,7 @@ getBB( const T1& elem1, const T2& elem2 )
 			return FRect_<typename T1::FType>( pp );
 	}
 
+#ifdef HOMOG2D_USE_EXCEPTION
 	try
 	{
 		out = getBB(
@@ -10495,6 +10498,12 @@ getBB( const T1& elem1, const T2& elem2 )
 		HOMOG2D_THROW_ERROR_1( "unable to compute bounding box:\n -arg1="
 			<< elem1 << "\n -arg2=" << elem2 << "\n -err=" << err.what() );
 	}
+#else
+	out = getBB(
+			ppair::getPointPair( elem1 ),
+			ppair::getPointPair( elem2 )
+		);
+#endif // HOMOG2D_USE_EXCEPTION
 	return out;
 }
 
